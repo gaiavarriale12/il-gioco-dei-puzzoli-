@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Il gioco dei puzzoli ❤️</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: #17131c;
+    color: #f4edf7;
+    font-family: Georgia, "Times New Roman", serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .game {
+    width: min(900px, 94vw);
+    min-height: 620px;
+    padding: 50px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+  .screen {
+    width: 100%;
+    animation: fade .45s ease;
+  }
+  @keyframes fade {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .chapter {
+    color: #d89ab5;
+    font-size: 19px;
+    font-style: italic;
+    margin-bottom: 14px;
+    letter-spacing: .5px;
+  }
+  h1 {
+    margin: 8px 0 20px;
+    font-size: clamp(32px, 6vw, 50px);
+  }
+  h2 {
+    margin: 8px 0 22px;
+    font-size: clamp(26px, 5vw, 38px);
+  }
+  p {
+    white-space: pre-line;
+    font-size: clamp(17px, 2.5vw, 20px);
+    line-height: 1.65;
+    margin: 20px auto;
+    max-width: 720px;
+  }
+  .secondary { color: #b9aebb; }
+  input {
+    width: min(360px, 90%);
+    padding: 14px 16px;
+    margin: 8px 0 5px;
+    border: 0;
+    outline: none;
+    border-radius: 8px;
+    background: #211b28;
+    color: #f4edf7;
+    text-align: center;
+    font: 18px Helvetica, Arial, sans-serif;
+  }
+  button {
+    display: block;
+    margin: 13px auto;
+    min-width: 230px;
+    padding: 13px 28px;
+    border: 0;
+    border-radius: 8px;
+    background: #9b5f7c;
+    color: white;
+    font: bold 16px Helvetica, Arial, sans-serif;
+    cursor: pointer;
+    transition: .2s;
+  }
+  button:hover {
+    background: #d89ab5;
+    transform: translateY(-2px);
+  }
+  .heart {
+    font-size: 58px;
+    margin-bottom: 10px;
+  }
+  .warning {
+    color: #d89ab5;
+    margin-top: 10px;
+    font: 14px Helvetica, Arial, sans-serif;
+  }
+  @media (max-height: 700px) {
+    .game { min-height: 100vh; padding: 25px 20px; }
+  }
+</style>
+</head>
+<body>
+<div class="game" id="game"></div>
+
+<script>
+const game = document.getElementById("game");
+let nomeGiocatore = "";
+
+function schermo(contenuto) {
+  game.innerHTML = `<div class="screen">${contenuto}</div>`;
+}
+
+function bottone(testo, azione) {
+  return `<button onclick="${azione}">${testo}</button>`;
+}
+
+function startScreen() {
+  schermo(`
+    <div class="chapter">❤️</div>
+    <h1>IL GIOCO DEI PUZZOLI</h1>
+    <p class="secondary"><i>Una piccola storia fatta per te.</i></p>
+    <h2>Prima di cominciare...</h2>
+    <input id="nome" type="text" placeholder="Inserisci il tuo nome" maxlength="30">
+    <div class="warning" id="avviso"></div>
+    <button onclick="iniziaGioco()">START</button>
+  `);
+  document.getElementById("nome").addEventListener("keydown", e => {
+    if (e.key === "Enter") iniziaGioco();
+  });
+}
+
+function iniziaGioco() {
+  nomeGiocatore = document.getElementById("nome").value.trim();
+  if (!nomeGiocatore) {
+    document.getElementById("avviso").textContent = "Prima dimmi il tuo nome ❤️";
+    return;
+  }
+  capitoloUno();
+}
+
+function capitoloUno() {
+  schermo(`
+    <div class="chapter">CAPITOLO I</div>
+    <h1>L'inizio</h1>
+    <p>Ci sono momenti nella vita che sembrano normali
+finché non ti accorgi che sono diventati
+l'inizio di qualcosa di importante.
+
+La nostra storia è iniziata da ...Esposito.</p>
+    ${bottone("Continua →", "scenaNapoli()")}
+  `);
+}
+
+function scenaNapoli() {
+  schermo(`
+    <div class="chapter">9 FEBBRAIO 2024</div>
+    <h1>Napoli.</h1>
+    <p>Una pioggia torrenziale.
+
+Di quelle che ti fanno venire voglia di correre a casa.
+Eppure, in qualche modo, quella giornata
+è diventata una delle più importanti della nostra storia.</p>
+    ${bottone("Io ricordo...", "primaDomanda()")}
+  `);
+}
+
+function primaDomanda() {
+  schermo(`
+    <div class="chapter">DOMANDA I</div>
+    <h2>Quando è iniziata ufficialmente la nostra storia?</h2>
+    ${bottone("14 febbraio 2024", "risultatoDomanda(false)")}
+    ${bottone("3 febbraio 2024", "risultatoDomanda(true)")}
+    ${bottone("2 febbraio 2024", "risultatoDomanda(false)")}
+    ${bottone("Non se lo ricorda :()", "risultatoDomanda(false)")}
+  `);
+}
+
+function risultatoDomanda(corretta) {
+  if (corretta) {
+    schermo(`
+      <h1>Esatto. ❤️</h1>
+      <p>3 febbraio 2024.
+
+Una data che sul calendario sembra normalissima,
+ma che per noi significa qualcosa di completamente diverso.</p>
+      ${bottone("Continua →", "puzzolandia()")}
+    `);
+  } else {
+    schermo(`
+      <h1>MA COSA?!</h1>
+      <p>Hai ufficialmente fallito il test da fidanzato.
+
+Ma ti concedo un'altra possibilità.</p>
+      ${bottone("Continua →", "puzzolandia()")}
+    `);
+  }
+}
+
+function puzzolandia() {
+  schermo(`
+    <div class="chapter">INTERMEZZO</div>
+    <h1>Benvenuto a Puzzolandia.</h1>
+    <p>Secondo fonti antiche e assolutamente affidabili,
+
+«I puzzoli vivono in Puzzolandia.»
+
+La democrazia dei puzzoli coccolosi vince su tutto:
+«coccole!».</p>
+    ${bottone("Tap tap →", "comicon()")}
+  `);
+}
+
+function comicon() {
+  schermo(`
+    <div class="chapter">CAPITOLO II</div>
+    <h1>I ricordi</h1>
+    <p>Alcuni ricordi non hanno bisogno di troppe spiegazioni.
+
+Basta che ci siano due persone che li hanno vissuti.
+
+Uno di questi è stato milano 2024.</p>
+    ${bottone("Continua →", "londra()")}
+  `);
+}
+
+function londra() {
+  schermo(`
+    <div class="chapter">LONDRA</div>
+    <h1>Un altro ricordo.</h1>
+    <p>Una città.
+Una vacanza.
+Due persone.
+
+E tanti piccoli momenti che,
+senza nemmeno accorgercene,
+sono diventati parte della nostra storia.</p>
+    ${bottone("Continua →", "finale()")}
+  `);
+}
+
+function finale() {
+  schermo(`
+    <div class="chapter">LA FINE?</div>
+    <h1>Non proprio.</h1>
+    <p>Perché la nostra storia non finisce qui.
+
+Ci sono ancora posti da vedere,
+ricordi da creare,
+e un'infinita quantità di
+«tap tap» da fare.</p>
+    ${bottone("Un'ultima cosa...", "messaggioFinale()")}
+  `);
+}
+
+function messaggioFinale() {
+  schermo(`
+    <div class="heart">❤️</div>
+    <h1>Cristiano,</h1>
+    <p>grazie per essere parte della mia storia.
+
+Da Esposito,
+alla pioggia torrenziale di Napoli,
+al Milano,
+a Londra,
+fino a tutti quei piccoli momenti
+che soltanto noi possiamo capire.
+
+Ti amo.
+
+Buon compleanno. ❤️</p>
+  `);
+}
+
+startScreen();
+</script>
+</body>
+</html>
